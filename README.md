@@ -43,9 +43,11 @@ If you are using wl-paste to watch your clipboard, please consider disabling it 
 I was getting frustrated with not being able to copy and paste correctly between xwayland and wayland applications. So I did a little bit of research, and on a github issue I found a bash script at the bottom of [this issue](https://github.com/hyprwm/Hyprland/issues/6132) which claimed to resolve the issue. However it had a lot of problems that stemmed from the lack of code blocking, and no MIME type awareness. So I created this to fix all of the shortcomings.
 
 ## Features
+```
 Image Sync
 File URI Sync
 Text Sync
 Basically runs as a daemon
 Clipboard history (via cliphist)
 ... and maybe more
+```
