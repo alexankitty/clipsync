@@ -31,3 +31,6 @@ File URI Sync
 Text Sync
 Basically runs as a daemon
 ... and maybe more
+
+## Known Issues
+Gives you an extra line break on pasting. If the line break is removed, breaks pasting under wayland for some reason.
