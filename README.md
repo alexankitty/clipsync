@@ -19,7 +19,7 @@ cliphist
 ```
 
 ## Installation
-Run `./install.sh` with the terminal of your choosing, and then add the `clipsync` to the autostart of your window manager.  
+Run `./install.sh` with the terminal of your choosing, and then add the `clipsync` to the autostaasdow manager.  
 Alternatively you may use the python build system with `./buildandinstall.sh` but please be aware this script is configured with `--break-system-packages`. It is recommended setting it up with your distro's build system, instead.
 
 ## Why did this happen?
@@ -31,6 +31,3 @@ File URI Sync
 Text Sync
 Basically runs as a daemon
 ... and maybe more
-
-## Known Issues
-Gives you an extra line break on pasting. If the line break is removed, breaks pasting under wayland for some reason.

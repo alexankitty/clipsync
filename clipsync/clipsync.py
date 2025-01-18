@@ -6,7 +6,7 @@ import time
 def getWaylandClipboard():
     try:
         mime = getWaylandMimeType()
-        return tryDecode(subprocess.run(['wl-paste', '-t', mime], capture_output=True).stdout)
+        return tryDecode(subprocess.run(['wl-paste', '-n', '-t', mime], capture_output=True).stdout)
     
     except Exception as e:
         print(traceback.format_exc())
@@ -31,7 +31,8 @@ def getWaylandMimeType():
                 return target
         
         #assume it's text because nothing bad could ever happen, right?
-        return 'text/plain'
+        #addendum: if this isn't set to utf-8, furryfox dies in a fire
+        return 'text/plain;charset=utf-8'
     
     except Exception as e:
         print(traceback.format_exc())
@@ -55,7 +56,7 @@ def getX11MimeType():
 
 def setWaylandClipboard(input, mime):
     try:
-        subprocess.run(['wl-copy', '-t', mime], input=input)
+        subprocess.run(['wl-copy', '-n', '-t', mime], input=input)
 
     except Exception as e:
         print(traceback.format_exc())
