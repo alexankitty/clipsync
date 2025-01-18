@@ -1,4 +1,4 @@
-#!env python
+#!/usr/bin/env python
 import subprocess
 import traceback
 import time

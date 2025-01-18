@@ -1,0 +1,12 @@
+LICENSE
+README.md
+install.sh
+pyproject.toml
+setup.py
+clipsync/__init.py
+clipsync/clipsync.py
+clipsync.egg-info/PKG-INFO
+clipsync.egg-info/SOURCES.txt
+clipsync.egg-info/dependency_links.txt
+clipsync.egg-info/entry_points.txt
+clipsync.egg-info/top_level.txt

@@ -1,0 +1,16 @@
+Metadata-Version: 2.2
+Name: clipsync
+Version: 1.0.0
+Summary: The daemon that lives in your computer that shuttles wayland and xorg clipboards
+Home-page: https://github.com/alexankitty/clipsync
+Author: Alexandra Stone
+Author-email: alexankitty@gmail.com
+License: GPL-2.0
+Keywords: clipboard,synchronization,wayland,xorg,x11
+License-File: LICENSE
+Dynamic: author
+Dynamic: author-email
+Dynamic: home-page
+Dynamic: keywords
+Dynamic: license
+Dynamic: summary
