@@ -33,7 +33,7 @@ makepkg -si
 I'm too lazy to put the PKGBUILD up on the AUR. You do it.
 
 ### Most Distros
-Run `./install.sh` with the terminal of your choosing, and then add the `clipsync` to the autostaasdow manager.  
+Run `./install.sh` with the terminal of your choosing, and then add the `clipsync` to the autostart of your window manager.  
 Alternatively you may use the python build system with `./buildandinstall.sh` but please be aware this script is configured with `--break-system-packages`. It is recommended setting it up with your distro's build system, instead.
 
 ## Why did this happen?
