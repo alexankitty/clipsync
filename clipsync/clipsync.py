@@ -70,8 +70,9 @@ def setX11Clipboard(input, mime):
     except Exception as e:
         print(traceback.format_exc())
 
-def storeClipHist(input):
-
+def storeClipHist(input, enabled):
+    if not enabled:
+        return
     try:
         subprocess.run(['cliphist', 'store'], input=input)
     except Exception as e:
@@ -112,12 +113,12 @@ def checkRequirements():
 
 def main():
     #give enough time for the clipboard to ready up
-    time.sleep(5)
+    time.sleep(0)
     #make sure we can run
     checkRequirements()
     #use the wayland clipboard as the intial source of truth
     lastclip = getWaylandClipboard()
-    cliphist = commandExists('cliphist')
+    cliphistenabled = commandExists('cliphist')
     
     while True:
         try:
@@ -137,15 +138,14 @@ def main():
         if wValue != lastclip:
             setX11Clipboard(tryEncode(wValue), wMime)
             lastclip = wValue
+            storeClipHist(tryEncode(lastclip), cliphistenabled)
+            # makes wayland the more important clipboard - this helps everything run smoothly
             continue
 
         if xValue != lastclip:
             setWaylandClipboard(tryEncode(xValue), xMime)
+            storeClipHist(tryEncode(lastclip), cliphistenabled)
             lastclip = xValue
-
-        if cliphist:
-            # todo: add an argument for turning off cliphist
-            storeClipHist(tryEncode(lastclip))    
 
 if __name__ == '__main__':
     main()
