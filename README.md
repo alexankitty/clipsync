@@ -19,6 +19,14 @@ cliphist
 ```
 
 ## Installation
+### Arch
+```sh
+git clone https://github.com/alexankitty/clipsync
+cd packaging
+makepkg -si
+```
+
+### Most Distros
 Run `./install.sh` with the terminal of your choosing, and then add the `clipsync` to the autostaasdow manager.  
 Alternatively you may use the python build system with `./buildandinstall.sh` but please be aware this script is configured with `--break-system-packages`. It is recommended setting it up with your distro's build system, instead.
 
