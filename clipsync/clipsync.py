@@ -6,7 +6,7 @@ import time
 def getWaylandClipboard():
     try:
         mime = getWaylandMimeType()
-        return tryDecode(subprocess.run(['wl-paste', '-n', '-t', mime], capture_output=True).stdout)
+        return tryDecode(subprocess.run(['wl-paste', '-t', mime], capture_output=True).stdout)
     
     except Exception as e:
         print(traceback.format_exc())
@@ -56,7 +56,7 @@ def getX11MimeType():
 
 def setWaylandClipboard(input, mime):
     try:
-        subprocess.run(['wl-copy', '-n', '-t', mime], input=input)
+        subprocess.run(['wl-copy', '-t', mime], input=input)
 
     except Exception as e:
         print(traceback.format_exc())
@@ -81,7 +81,7 @@ def storeClipHist(input, enabled):
 def tryDecode(data):
     try:
         if type(data) is bytes:
-            return data.decode('utf-8')
+            return data.decode('utf-8').strip()
     except:
         pass
     return data
@@ -113,7 +113,7 @@ def checkRequirements():
 
 def main():
     #give enough time for the clipboard to ready up
-    time.sleep(5)
+    time.sleep(0)
     #make sure we can run
     checkRequirements()
     #use the wayland clipboard as the intial source of truth
@@ -135,17 +135,17 @@ def main():
             # stops everything from firing on x selection
             continue
 
-        if wValue != lastclip:
+        if wValue and wValue != lastclip:
             setX11Clipboard(tryEncode(wValue), wMime)
             lastclip = wValue
             storeClipHist(tryEncode(lastclip), cliphistenabled)
             # makes wayland the more important clipboard - this helps everything run smoothly
             continue
 
-        if xValue != lastclip:
+        if xValue and xValue != lastclip:
             setWaylandClipboard(tryEncode(xValue), xMime)
-            storeClipHist(tryEncode(lastclip), cliphistenabled)
             lastclip = xValue
+            storeClipHist(tryEncode(lastclip), cliphistenabled)
 
 if __name__ == '__main__':
     main()
