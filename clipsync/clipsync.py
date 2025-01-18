@@ -5,18 +5,26 @@ import time
 
 def getWaylandClipboard():
     try:
+        print("getting wayland clipboard")
         mime = getWaylandMimeType()
-        return tryDecode(subprocess.run(['wl-paste', '-t', mime], capture_output=True).stdout)
+        return tryDecode(subprocess.run(['wl-paste', '-t', mime], capture_output=True, timeout=0.5).stdout)
     
     except Exception as e:
+        if type(e) is subprocess.TimeoutExpired:
+            #assume we got garbage
+            return ''
         print(traceback.format_exc())
 
 def getX11Clipboard():
     try:
+        print("getting xorg clipboard")
         mime = getX11MimeType()
-        return tryDecode(subprocess.run(['xclip', '-o', '-selection', 'clipboard', '-t', mime], capture_output=True).stdout)
+        return tryDecode(subprocess.run(['xclip', '-o', '-selection', 'clipboard', '-t', mime], capture_output=True, timeout=0.5).stdout)
     
     except Exception as e:
+        if type(e) is subprocess.TimeoutExpired:
+            #assume we got garbage
+            return b''
         print(traceback.format_exc())
 
 def getWaylandMimeType():
@@ -81,7 +89,7 @@ def storeClipHist(input, enabled):
 def tryDecode(data):
     try:
         if type(data) is bytes:
-            return data.decode('utf-8').strip()
+            return data.decode('utf-8').strip().strip('\x00')
     except:
         pass
     return data
@@ -116,8 +124,9 @@ def main():
     time.sleep(5)
     #make sure we can run
     checkRequirements()
-    #use the wayland clipboard as the intial source of truth
-    lastclip = getWaylandClipboard()
+    #assume we have nothing
+    lastclip = ''
+    print(f"last {lastclip}")
     cliphistenabled = commandExists('cliphist')
     
     while True:
