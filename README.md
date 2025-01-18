@@ -22,9 +22,10 @@ cliphist
 ### Arch
 ```sh
 git clone https://github.com/alexankitty/clipsync
-cd packaging
+cd clipsync/packaging
 makepkg -si
 ```
+I'm too lazy to put the PKGBUILD up on the AUR. You do it.
 
 ### Most Distros
 Run `./install.sh` with the terminal of your choosing, and then add the `clipsync` to the autostaasdow manager.  
