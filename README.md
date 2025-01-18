@@ -19,10 +19,15 @@ cliphist
 ```
 
 ## Installation
-### Arch
+### Arch (via sparse checkout)
 ```sh
-git clone https://github.com/alexankitty/clipsync
-cd clipsync/packaging
+git init clipsync
+cd clipsync
+git remote add -f origin https://github.com/alexankitty/clipsync
+git config core.sparseCheckout true
+echo "packaging" >> .git/info/sparse-checkout
+git pull origin main
+cd packaging
 makepkg -si
 ```
 I'm too lazy to put the PKGBUILD up on the AUR. You do it.
