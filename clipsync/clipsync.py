@@ -113,7 +113,7 @@ def checkRequirements():
 
 def main():
     #give enough time for the clipboard to ready up
-    time.sleep(0)
+    time.sleep(5)
     #make sure we can run
     checkRequirements()
     #use the wayland clipboard as the intial source of truth
