@@ -5,7 +5,6 @@ import time
 
 def getWaylandClipboard():
     try:
-        print("getting wayland clipboard")
         mime = getWaylandMimeType()
         return tryDecode(subprocess.run(['wl-paste', '-t', mime], capture_output=True, timeout=0.5).stdout)
     
@@ -17,7 +16,6 @@ def getWaylandClipboard():
 
 def getX11Clipboard():
     try:
-        print("getting xorg clipboard")
         mime = getX11MimeType()
         return tryDecode(subprocess.run(['xclip', '-o', '-selection', 'clipboard', '-t', mime], capture_output=True, timeout=0.5).stdout)
     
@@ -126,7 +124,6 @@ def main():
     checkRequirements()
     #assume we have nothing
     lastclip = ''
-    print(f"last {lastclip}")
     cliphistenabled = commandExists('cliphist')
     
     while True:
