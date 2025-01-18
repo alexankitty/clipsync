@@ -1,6 +1,7 @@
 #!env python
 import subprocess
 import traceback
+import time
 
 def getWaylandClipboard():
     try:
@@ -109,6 +110,8 @@ def checkRequirements():
         quit()
 
 def main():
+    #give enough time for the clipboard to ready up
+    time.sleep(5)
     #make sure we can run
     checkRequirements()
     #use the wayland clipboard as the intial source of truth
@@ -140,6 +143,7 @@ def main():
             lastclip = xValue
 
         if cliphist:
+            # todo: add an argument for turning off cliphist
             storeClipHist(tryEncode(lastclip))    
 
 if __name__ == '__main__':
