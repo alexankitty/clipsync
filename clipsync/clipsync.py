@@ -2,6 +2,9 @@
 import subprocess
 import traceback
 import time
+import argparse
+
+verbose = False
 
 def getWaylandClipboard():
     try:
@@ -17,7 +20,7 @@ def getWaylandClipboard():
 def getX11Clipboard():
     try:
         mime = getX11MimeType()
-        return tryDecode(subprocess.run(['xclip', '-o', '-selection', 'clipboard', '-t', mime], capture_output=True, timeout=0.5).stdout)
+        return tryDecode(subprocess.run(['xclip', '-o', '-t', mime], capture_output=True, timeout=0.5).stdout)
     
     except Exception as e:
         if type(e) is subprocess.TimeoutExpired:
@@ -69,10 +72,14 @@ def setWaylandClipboard(input, mime):
 
 def setX11Clipboard(input, mime):
     try:
-        subprocess.run(['xclip', '-selection', 'clipboard', '-t', mime], input=input)
-        if not "text" in mime:
-            #hack to undo whatever xclip messes up when it gets sync'd to the wl clipboard
+        log(mime)
+        if 'text' in mime:
+            # it doesn't like if you set the mime type on piped text
+            subprocess.run(['xclip', '-i', '-t', mime], input=input)
+        else:    
+            subprocess.run(['xclip', '-i', '-t', mime], input=input)
             setWaylandClipboard(input, mime)
+        
     except Exception as e:
         print(traceback.format_exc())
 
@@ -117,9 +124,25 @@ def checkRequirements():
         print(f"Missing the following requirements: {missing}")
         quit()
 
+def log(info):
+    global verbose
+    if(verbose):
+        print(info)
+
 def main():
+    parser = argparse.ArgumentParser(
+        description='The daemon that lives in your computer that shuttles wayland and xorg clipboards.',
+        epilog='Written by Alexankitty 2025'
+    )
+    parser.add_argument('-v', '--verbose', action='store_true')
+    args = parser.parse_args()
+    global verbose
+    verbose = args.verbose
+    startupTime = 5
+    if verbose:
+        startupTime = 0
     #give enough time for the clipboard to ready up
-    time.sleep(5)
+    time.sleep(startupTime)
     #make sure we can run
     checkRequirements()
     #assume we have nothing
@@ -137,11 +160,16 @@ def main():
         xValue = getX11Clipboard()
         xMime = getX11MimeType()
 
+        log(f"Wayland: {wValue}, Mime: {wMime}")
+        log(f"X11: {xValue}, Mime: {xMime}")
+        log(f"Last: {lastclip}")
+
         if wValue == xValue:
             # stops everything from firing on x selection
             continue
 
         if wValue and wValue != lastclip:
+            log("Updating X11 Clipboard")
             setX11Clipboard(tryEncode(wValue), wMime)
             lastclip = wValue
             storeClipHist(tryEncode(lastclip), cliphistenabled)
@@ -149,6 +177,7 @@ def main():
             continue
 
         if xValue and xValue != lastclip:
+            log("Updating Wayland Clipboard")
             setWaylandClipboard(tryEncode(xValue), xMime)
             lastclip = xValue
             storeClipHist(tryEncode(lastclip), cliphistenabled)
