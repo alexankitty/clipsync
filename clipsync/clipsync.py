@@ -20,7 +20,8 @@ def getWaylandClipboard():
 def getX11Clipboard():
     try:
         mime = getX11MimeType()
-        return tryDecode(subprocess.run(['xclip', '-o', '-t', mime], capture_output=True, timeout=0.5).stdout)
+        log(subprocess.run(['xclip', '-o', '-selection', 'clipboard'], capture_output=True, timeout=0.5).stderr)
+        return tryDecode(subprocess.run(['xclip', '-o', '-selection', 'clipboard', '-t', mime], capture_output=True, timeout=0.5).stdout)
     
     except Exception as e:
         if type(e) is subprocess.TimeoutExpired:
@@ -41,7 +42,7 @@ def getWaylandMimeType():
         
         #assume it's text because nothing bad could ever happen, right?
         #addendum: if this isn't set to utf-8, furryfox dies in a fire
-        return 'text/plain;charset=utf-8'
+        return 'UTF8_STRING'
     
     except Exception as e:
         print(traceback.format_exc())
@@ -58,7 +59,7 @@ def getX11MimeType():
                 return target
         
         #assume it's text because nothing bad could ever happen, right?
-        return 'text/plain'
+        return 'UTF8_STRING'
 
     except Exception as e:
         print(traceback.format_exc())
@@ -72,12 +73,11 @@ def setWaylandClipboard(input, mime):
 
 def setX11Clipboard(input, mime):
     try:
-        log(mime)
-        if 'text' in mime:
-            # it doesn't like if you set the mime type on piped text
-            subprocess.run(['xclip', '-i', '-t', mime], input=input)
-        else:    
-            subprocess.run(['xclip', '-i', '-t', mime], input=input)
+        if "UTF8_STRING" in mime:
+            #xclip has screwy behaviors with text that cause inconsistent clipboard problems
+            subprocess.run(['xclip', '-selection', 'clipboard', '-t', mime], input=input)
+        else:
+            subprocess.run(['xclip', '-i', '-selection', 'clipboard', '-t', mime], input=input)
             setWaylandClipboard(input, mime)
         
     except Exception as e:
